@@ -54,10 +54,4 @@ geneNumberInKEGG <- function(genename, KEGGname){
   for(i in 1:nrow(uniqueKEGG)){
     uniqueKEGG$KEGGname[i] <- RCurl::getURL(paste0("http://togows.dbcls.jp/entry/pathway/", uniqueKEGG$KEGGid[i], "/name"))
   }
-  
-  
-  
-  require(rvest)
-  for(length(unique(annots_KEGG$PathwayID))){
-    kegg <- read_html(paste0("https://www.kegg.jp/dbget-bin/www_bget?pathway+", annots_KEGG$PathwayID), encoding = "ISO-8859-1")  
-    tmp <- kegg %>% html_nodes("td") %>% html_text()
+}
