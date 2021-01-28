@@ -1,5 +1,7 @@
 
 geneNumberInGO <- function(genename, GOname){
+  if (is.null(genename)) stop("There is not any gene name that provided as input")
+  if (is.null(GOname)) stop("There is not any GO term name that provided as input")
   if (!requireNamespace("org.Hs.eg.db", quietly = TRUE))
     install.packages("org.Hs.eg.db")
   if (!requireNamespace("AnnotationDbi", quietly = TRUE))
@@ -28,10 +30,14 @@ geneNumberInGO <- function(genename, GOname){
     dplyr::select(SYMBOL, ENTREZID, go_id, GO_name) %>% 
     dplyr::distinct(SYMBOL, GO_name, .keep_all = TRUE) %>%
     tidyr::drop_na() 
+  table_tmp <- dplyr::group_by(tmp, GO_name) %>% 
+    dplyr::mutate(genes = paste0(SYMBOL, collapse = ", ")) %>% 
+    dplyr::select(GO_name, genes) %>% 
+    dplyr::distinct(GO_name, genes, .keep_all = TRUE)
   table <-
     dplyr::group_by(tmp, GO_name) %>% 
-    mutate(genes = paste0(SYMBOL, collapse = ", ")) %>% 
-    dplyr::summarise(Ngenes = n(), SYMBOL) 
+    dplyr::summarise(Ngenes = n())
+  return(list(genes = table_tmp, numbers = table))
 }
   
 geneNumberInKEGG <- function(genename, KEGGname){
