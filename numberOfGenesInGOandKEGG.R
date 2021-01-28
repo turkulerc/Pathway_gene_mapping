@@ -27,9 +27,11 @@ geneNumberInGO <- function(genename, GOname){
     dplyr::left_join(annots_GO) %>% 
     dplyr::select(SYMBOL, ENTREZID, go_id, GO_name) %>% 
     dplyr::distinct(SYMBOL, GO_name, .keep_all = TRUE) %>%
-    tidyr::drop_na() %>% 
-    dplyr::group_by(GO_name) %>% 
-    dplyr::summarise(Ngenes = n())
+    tidyr::drop_na() 
+  table <-
+    dplyr::group_by(tmp, GO_name) %>% 
+    mutate(genes = paste0(SYMBOL, collapse = ", ")) %>% 
+    dplyr::summarise(Ngenes = n(), SYMBOL) 
 }
   
 geneNumberInKEGG <- function(genename, KEGGname){
